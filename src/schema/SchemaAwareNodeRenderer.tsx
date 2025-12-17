@@ -119,18 +119,15 @@ export const createSchemaAwareNodeRenderer = ({
       );
     }
 
-    return (
-      <span title={description}>
-        <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} />
-      </span>
-    );
+    return <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} title={description} />;
   };
 
   /** Helper for root preview with schema name */
   const SchemaAwareObjectPreviewWithName: FC<{
     data: unknown;
     schemaDisplayName?: string;
-  }> = ({ data, schemaDisplayName }) => {
+    title?: string;
+  }> = ({ data, schemaDisplayName, title }) => {
     if (
       schemaDisplayName &&
       typeof data === 'object' &&
@@ -140,14 +137,18 @@ export const createSchemaAwareNodeRenderer = ({
       data.constructor?.name === 'Object'
     ) {
       return (
-        <span>
+        <span title={title}>
           <span style={{ fontStyle: 'italic' }}>{schemaDisplayName} </span>
           <ObjectPreview data={data} />
         </span>
       );
     }
 
-    return <ObjectPreview data={data} />;
+    return (
+      <span title={title} style={{ display: 'contents' }}>
+        <ObjectPreview data={data} />
+      </span>
+    );
   };
 
   /**
