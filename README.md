@@ -1,4 +1,21 @@
-# react-inspector
+# react-inspector ([overengineered](https://www.overengineering.studio/) fork)
+
+> **This is a fork of [storybookjs/react-inspector](https://github.com/storybookjs/react-inspector).**
+>
+> See [FORK_CHANGELOG.md](./FORK_CHANGELOG.md) for differences from upstream.
+
+## Fork Goals
+
+This fork adds:
+
+- **Effect Schema support** - Native rendering for Effect Schema types with proper inspection
+- **Minor improvements** - Small enhancements and fixes not yet merged upstream
+
+---
+
+*Original README follows:*
+
+---
 
 [![build status](https://img.shields.io/travis/storybookjs/react-inspector/master.svg?style=flat-square)](https://travis-ci.org/storybookjs/react-inspector)
 [![npm version](https://img.shields.io/npm/v/react-inspector.svg?style=flat-square)](https://www.npmjs.com/package/react-inspector)
