@@ -24,6 +24,8 @@ export interface SchemaContextValue {
   getAnnotations: () => SchemaAnnotations;
   /** Get display name for the current value (from schema annotations) */
   getDisplayName: () => string | undefined;
+  /** Get description for the current value (from schema annotations) */
+  getDescription: () => string | undefined;
   /** Format a value using schema's pretty annotation */
   formatValue: (value: unknown) => string | undefined;
   /** Get schema context for a child field */
@@ -44,6 +46,7 @@ const defaultContextValue: SchemaContextValue = {
   registry: createSchemaRegistry(),
   getAnnotations: () => ({}),
   getDisplayName: () => undefined,
+  getDescription: () => undefined,
   formatValue: () => undefined,
   getFieldContext: () => defaultContextValue,
   getElementContext: () => defaultContextValue,
@@ -111,6 +114,7 @@ const createContextValue = (
     registry,
     getAnnotations: () => (schema ? getAnnotations(schema) : {}),
     getDisplayName: () => (schema ? getDisplayName(getAnnotations(schema)) : undefined),
+    getDescription: () => (schema ? getAnnotations(schema).description : undefined),
     formatValue: (value: unknown) => (schema ? formatWithPretty(value, getAnnotations(schema)) : undefined),
     getFieldContext: (fieldName: string) => {
       if (!schema) return createContextValue(undefined, registry, effectiveRootSchema);

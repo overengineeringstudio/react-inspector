@@ -70,8 +70,12 @@ export const createSchemaAwareNodeRenderer = ({
     path: string;
     isNonenumerable?: boolean;
   }> = ({ name, data, path, isNonenumerable = false }) => {
+    const rootCtx = useSchemaContext();
+    const schemaCtx = rootCtx.getContextForPath(path);
+    const description = schemaCtx.getDescription();
+
     return (
-      <span>
+      <span title={description}>
         {typeof name === 'string' ? (
           <ObjectName name={name} dimmed={isNonenumerable} />
         ) : (
@@ -87,26 +91,27 @@ export const createSchemaAwareNodeRenderer = ({
   const SchemaAwareObjectRootLabel: FC<{ name?: string; data: unknown; path: string }> = ({ name, data, path }) => {
     const rootCtx = useSchemaContext();
     const schemaCtx = rootCtx.getContextForPath(path);
+    const description = schemaCtx.getDescription();
 
     const prettyFormatted = schemaCtx.formatValue(data);
     if (prettyFormatted !== undefined) {
       if (typeof name === 'string') {
         return (
-          <span>
+          <span title={description}>
             <ObjectName name={name} />
             <span>: </span>
             <span>{prettyFormatted}</span>
           </span>
         );
       }
-      return <span>{prettyFormatted}</span>;
+      return <span title={description}>{prettyFormatted}</span>;
     }
 
     const schemaDisplayName = schemaCtx.getDisplayName();
 
     if (typeof name === 'string') {
       return (
-        <span>
+        <span title={description}>
           <ObjectName name={name} />
           <span>: </span>
           <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} />
@@ -114,7 +119,11 @@ export const createSchemaAwareNodeRenderer = ({
       );
     }
 
-    return <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} />;
+    return (
+      <span title={description}>
+        <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} />
+      </span>
+    );
   };
 
   /** Helper for root preview with schema name */
