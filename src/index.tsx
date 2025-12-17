@@ -32,3 +32,24 @@ interface TableInspectorProps extends ComponentProps<typeof TableInspector> {
 interface ObjectInspectorProps extends ComponentProps<typeof ObjectInspector> {
   table: false;
 }
+
+// ============================================================================
+// Fork additions: Effect Schema support
+// All new code is in src/schema/ - these are just re-exports
+// ============================================================================
+export {
+  SchemaProvider,
+  useSchemaContext,
+  useSchemaDisplayInfo,
+  type SchemaContextValue,
+  type SchemaProviderProps,
+} from './schema/mod';
+
+export {
+  withSchemaSupport,
+  withSchemaContext,
+  type SchemaAwareObjectInspectorDeps,
+} from './schema/SchemaAwareObjectInspector';
+export { createSchemaAwareNodeRenderer } from './schema/SchemaAwareNodeRenderer';
+export { SchemaAwareObjectValue } from './schema/SchemaAwareObjectValue';
+export { SchemaAwareObjectPreview } from './schema/SchemaAwareObjectPreview';
