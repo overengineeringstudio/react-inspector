@@ -322,3 +322,149 @@ export const UsingSchemaProviderDirectly = {
   ),
   name: 'Using SchemaProvider directly',
 };
+
+/** Schema with description annotations - hover over fields to see tooltips */
+const DocumentedUserSchema = Schema.Struct({
+  id: Schema.Number.annotations({
+    description: 'Unique identifier for the user in the database',
+  }),
+  name: Schema.String.annotations({
+    description: 'Full legal name of the user',
+  }),
+  email: Schema.String.annotations({
+    description: 'Primary email address used for authentication and notifications',
+  }),
+  role: Schema.Union(Schema.Literal('admin'), Schema.Literal('moderator'), Schema.Literal('user')).annotations({
+    description: 'Access level determining permissions in the system',
+  }),
+  preferences: Schema.Struct({
+    theme: Schema.Union(Schema.Literal('light'), Schema.Literal('dark')).annotations({
+      description: 'UI color scheme preference',
+    }),
+    notifications: Schema.Boolean.annotations({
+      description: 'Whether to receive email notifications',
+    }),
+    language: Schema.String.annotations({
+      description: 'Preferred language code (e.g., en-US, de-DE)',
+    }),
+  }).annotations({
+    identifier: 'UserPreferences',
+    title: 'User Preferences',
+    description: 'User-configurable settings for the application',
+  }),
+}).annotations({
+  identifier: 'DocumentedUser',
+  title: 'User',
+  description: 'A registered user in the system with authentication credentials and preferences',
+});
+
+type DocumentedUser = typeof DocumentedUserSchema.Type;
+
+const sampleDocumentedUser: DocumentedUser = {
+  id: 42,
+  name: 'Alice Johnson',
+  email: 'alice@example.com',
+  role: 'admin',
+  preferences: {
+    theme: 'dark',
+    notifications: true,
+    language: 'en-US',
+  },
+};
+
+export const SchemaWithDescriptionTooltips = {
+  render: () => (
+    <div>
+      <p style={{ marginBottom: '16px', color: '#666' }}>
+        Hover over any field to see its description from the schema annotation.
+      </p>
+      <SchemaObjectInspector data={sampleDocumentedUser} schema={DocumentedUserSchema} expandLevel={2} />
+    </div>
+  ),
+  name: 'Schema with description tooltips',
+};
+
+/** API Response schema with detailed field descriptions */
+const ApiResponseSchema = Schema.Struct({
+  status: Schema.Number.annotations({
+    description: 'HTTP status code of the response (e.g., 200, 404, 500)',
+    pretty: (value) => {
+      const code = value as number;
+      if (code >= 200 && code < 300) return `✓ ${code}`;
+      if (code >= 400 && code < 500) return `⚠ ${code}`;
+      return `✗ ${code}`;
+    },
+  }),
+  data: Schema.Struct({
+    items: Schema.Array(
+      Schema.Struct({
+        id: Schema.String.annotations({
+          description: 'UUID v4 identifier',
+        }),
+        value: Schema.Number.annotations({
+          description: 'Numeric value in base units',
+          pretty: (v) => `${v} units`,
+        }),
+      }).annotations({
+        identifier: 'DataItem',
+        title: 'Data Item',
+        description: 'Individual data record from the API',
+      })
+    ).annotations({
+      description: 'Array of data items returned by the query',
+    }),
+    total: Schema.Number.annotations({
+      description: 'Total count of items matching the query (may exceed items.length due to pagination)',
+    }),
+  }).annotations({
+    identifier: 'ResponseData',
+    title: 'Response Data',
+    description: 'Payload containing the requested data',
+  }),
+  meta: Schema.Struct({
+    requestId: Schema.String.annotations({
+      description: 'Unique identifier for tracing this request through logs',
+    }),
+    duration: Schema.Number.annotations({
+      description: 'Server-side processing time in milliseconds',
+      pretty: (v) => `${v}ms`,
+    }),
+  }).annotations({
+    identifier: 'ResponseMeta',
+    title: 'Metadata',
+    description: 'Request metadata for debugging and monitoring',
+  }),
+}).annotations({
+  identifier: 'ApiResponse',
+  title: 'API Response',
+  description: 'Standard response envelope for all API endpoints',
+});
+
+type ApiResponse = typeof ApiResponseSchema.Type;
+
+const sampleApiResponse: ApiResponse = {
+  status: 200,
+  data: {
+    items: [
+      { id: 'a1b2c3d4', value: 42 },
+      { id: 'e5f6g7h8', value: 17 },
+    ],
+    total: 156,
+  },
+  meta: {
+    requestId: 'req_abc123xyz',
+    duration: 45,
+  },
+};
+
+export const ApiResponseWithDescriptions = {
+  render: () => (
+    <div>
+      <p style={{ marginBottom: '16px', color: '#666' }}>
+        Complex nested schema with descriptions and pretty formatting. Hover over fields for documentation.
+      </p>
+      <SchemaObjectInspector data={sampleApiResponse} schema={ApiResponseSchema} expandLevel={3} />
+    </div>
+  ),
+  name: 'API response with descriptions and formatting',
+};
