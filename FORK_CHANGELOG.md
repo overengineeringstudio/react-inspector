@@ -86,6 +86,11 @@ const SchemaInspector = withSchemaSupport(ObjectInspector);
 </SchemaProvider>
 ```
 
+#### Netlify Configuration (2024-12-17)
+
+- Add `netlify.toml` for Storybook deployment ([PR #4](https://github.com/overengineeringstudio/react-inspector/pull/4))
+  - Configures Netlify with Node 22, corepack, and correct build/publish settings
+
 ### Changed
 
 *No changes yet.*
