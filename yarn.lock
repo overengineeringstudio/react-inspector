@@ -948,6 +948,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@overeng/react-inspector@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@overeng/react-inspector@workspace:."
+  dependencies:
+    "@storybook/react": "npm:^9.1.4"
+    "@storybook/react-vite": "npm:^9.1.4"
+    "@testing-library/dom": "npm:^10.4.1"
+    "@testing-library/react": "npm:^16.3.0"
+    "@testing-library/user-event": "npm:^14.6.1"
+    "@types/is-dom": "npm:^1.1.2"
+    "@types/react": "npm:^19.1.12"
+    "@typescript-eslint/eslint-plugin": "npm:^8.42.0"
+    "@typescript-eslint/parser": "npm:^8.42.0"
+    auto: "npm:^11.3.0"
+    chromatic: "npm:^13.1.4"
+    eslint: "npm:^9.34.0"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-prettier: "npm:^5.5.4"
+    eslint-plugin-storybook: "npm:^9.1.4"
+    happy-dom: "npm:^18.0.1"
+    is-dom: "npm:^1.1.0"
+    prettier: "npm:^3.6.2"
+    react: "npm:^19.1.1"
+    react-dom: "npm:^19.1.1"
+    react-test-renderer: "npm:^19.1.1"
+    storybook: "npm:^9.1.4"
+    tsup: "npm:^8.5.0"
+    typescript: "npm:^5.9.2"
+    vite: "npm:^7.1.4"
+    vitest: "npm:^3.2.4"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+  languageName: unknown
+  linkType: soft
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -4559,41 +4594,6 @@ __metadata:
   checksum: 10c0/8c91198510521299c56e4e8d5e3a4508b2734fb5e52f29eeac33811de64e76fe586ad32c32182e2e84e070d98df67125da346c3360013357228172dbcd20bcdd
   languageName: node
   linkType: hard
-
-"react-inspector@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "react-inspector@workspace:."
-  dependencies:
-    "@storybook/react": "npm:^9.1.4"
-    "@storybook/react-vite": "npm:^9.1.4"
-    "@testing-library/dom": "npm:^10.4.1"
-    "@testing-library/react": "npm:^16.3.0"
-    "@testing-library/user-event": "npm:^14.6.1"
-    "@types/is-dom": "npm:^1.1.2"
-    "@types/react": "npm:^19.1.12"
-    "@typescript-eslint/eslint-plugin": "npm:^8.42.0"
-    "@typescript-eslint/parser": "npm:^8.42.0"
-    auto: "npm:^11.3.0"
-    chromatic: "npm:^13.1.4"
-    eslint: "npm:^9.34.0"
-    eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-prettier: "npm:^5.5.4"
-    eslint-plugin-storybook: "npm:^9.1.4"
-    happy-dom: "npm:^18.0.1"
-    is-dom: "npm:^1.1.0"
-    prettier: "npm:^3.6.2"
-    react: "npm:^19.1.1"
-    react-dom: "npm:^19.1.1"
-    react-test-renderer: "npm:^19.1.1"
-    storybook: "npm:^9.1.4"
-    tsup: "npm:^8.5.0"
-    typescript: "npm:^5.9.2"
-    vite: "npm:^7.1.4"
-    vitest: "npm:^3.2.4"
-  peerDependencies:
-    react: ^18.0.0 || ^19.0.0
-  languageName: unknown
-  linkType: soft
 
 "react-is@npm:^17.0.1":
   version: 17.0.2
