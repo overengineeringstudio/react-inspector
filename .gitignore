@@ -7,6 +7,3 @@ dist
 storybook-static
 .yarn/*
 .playwright-mcp
-
-# Temporary files
-tmp-bin/
