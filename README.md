@@ -11,6 +11,94 @@ This fork adds:
 - **Effect Schema support** - Native rendering for Effect Schema types with proper inspection
 - **Minor improvements** - Small enhancements and fixes not yet merged upstream
 
+## Effect Schema Support
+
+This fork adds optional support for [Effect Schema](https://effect.website/docs/schema/introduction) to enrich the display of inspected data using schema annotations.
+
+### Features
+
+- **Type names**: Display schema type names (e.g., "User", "Order") instead of generic "Object"
+- **Pretty print**: Custom value formatting using the `pretty` annotation (e.g., `$29.99` for currency)
+- **Nested schemas**: Full support for nested object and array schemas with automatic type resolution
+
+### Comparison: With vs Without Schema
+
+![Schema comparison showing enhanced display with type names and formatting](https://iili.io/fccqBSf.png)
+
+**With Schema** (left): Shows "Order" type name, "Order Item" for array elements, and `$109.97` formatted prices.
+
+**Without Schema** (right): Shows plain `{...}` without type name, "Object" for array elements, and raw `109.97` numbers.
+
+### Nested Schema Support
+
+![Nested schema support showing Address type annotation](https://iili.io/fccquV9.png)
+
+Nested objects like `address` display their schema type name ("Address") instead of "Object".
+
+### Usage
+
+```tsx
+import { Schema } from 'effect';
+import {
+  ObjectInspector,
+  ObjectRootLabel,
+  ObjectLabel,
+  ObjectName,
+  ObjectValue,
+  ObjectPreview,
+  withSchemaSupport,
+} from '@overeng/react-inspector';
+
+// Define your schemas with annotations
+const AddressSchema = Schema.Struct({
+  street: Schema.String,
+  city: Schema.String,
+}).annotations({
+  identifier: 'Address',
+  title: 'Address',
+});
+
+const UserSchema = Schema.Struct({
+  name: Schema.String,
+  address: AddressSchema,
+}).annotations({
+  identifier: 'User',
+  title: 'User',
+});
+
+// Create a schema-aware inspector
+const SchemaObjectInspector = withSchemaSupport(ObjectInspector, {
+  ObjectRootLabel,
+  ObjectLabel,
+  ObjectName,
+  ObjectValue,
+  ObjectPreview,
+});
+
+// Use it with your data and schema
+const user = { name: 'John', address: { street: '123 Main St', city: 'NYC' } };
+
+<SchemaObjectInspector data={user} schema={UserSchema} expandLevel={2} />
+```
+
+### Pretty Print Annotation
+
+Use the `pretty` annotation for custom value formatting:
+
+```tsx
+const MoneySchema = Schema.Number.annotations({
+  identifier: 'Money',
+  pretty: (value) => `$${(value as number).toFixed(2)}`,
+});
+
+const ProductSchema = Schema.Struct({
+  name: Schema.String,
+  price: MoneySchema,
+}).annotations({ identifier: 'Product' });
+```
+
+This will display `price: $29.99` instead of `price: 29.99`.
+
 ---
 
 *Original README follows:*
