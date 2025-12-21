@@ -11,7 +11,7 @@ export {
   createSchemaRegistry,
   registerSchema,
   lookupSchema,
-} from './effectSchema';
+} from './effectSchema.tsx';
 
 export {
   type SchemaContextValue,
@@ -19,13 +19,13 @@ export {
   SchemaProvider,
   useSchemaContext,
   useSchemaDisplayInfo,
-} from './SchemaContext';
+} from './SchemaContext.tsx';
 
 export {
   withSchemaSupport,
   withSchemaContext,
   type SchemaAwareObjectInspectorDeps,
-} from './SchemaAwareObjectInspector';
-export { createSchemaAwareNodeRenderer } from './SchemaAwareNodeRenderer';
-export { SchemaAwareObjectValue } from './SchemaAwareObjectValue';
-export { SchemaAwareObjectPreview } from './SchemaAwareObjectPreview';
+} from './SchemaAwareObjectInspector.tsx';
+export { createSchemaAwareNodeRenderer } from './SchemaAwareNodeRenderer.tsx';
+export { SchemaAwareObjectValue } from './SchemaAwareObjectValue.tsx';
+export { SchemaAwareObjectPreview } from './SchemaAwareObjectPreview.tsx';

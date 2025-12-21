@@ -14,12 +14,11 @@ export const wildcardPathsFromLevel = (level) => {
 };
 
 export const getExpandedPaths = (data, dataIterator, expandPaths, expandLevel, prevExpandedPaths) => {
-  const wildcardPaths = []
-    .concat(wildcardPathsFromLevel(expandLevel))
+  const wildcardPaths = wildcardPathsFromLevel(expandLevel)
     .concat(expandPaths)
     .filter((path) => typeof path === 'string'); // could be undefined
 
-  const expandedPaths = [];
+  const expandedPaths: string[] = [];
   wildcardPaths.forEach((wildcardPath) => {
     const keyPaths = wildcardPath.split('.');
     const populatePaths = (curData, curPath, depth) => {

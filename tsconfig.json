@@ -5,15 +5,19 @@
     "allowJs": true,
     "checkJs": false,
     "jsx": "react",
-    "rootDir": ".",
+    "rootDir": "src",
+    "outDir": "dist",
     "removeComments": true,
     "noImplicitAny": false,
-    "noEmit": true,
+    "strict": true,
+    "allowImportingTsExtensions": true,
     "pretty": true,
     "skipLibCheck": true,
-    "strict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]

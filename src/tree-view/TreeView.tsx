@@ -5,7 +5,7 @@ import { DEFAULT_ROOT_PATH, hasChildNodes, getExpandedPaths } from './pathUtils'
 
 import { useStyles } from '../styles';
 
-const ConnectedTreeNode = memo<any>((props) => {
+const ConnectedTreeNode = memo((props: any) => {
   const { data, dataIterator, path, depth, nodeRenderer } = props;
   const [expandedPaths, setExpandedPaths] = useContext(ExpandedPathsContext);
   const nodeHasChildNodes = hasChildNodes(data, dataIterator);
@@ -64,7 +64,7 @@ const ConnectedTreeNode = memo<any>((props) => {
 //   nodeRenderer: PropTypes.func,
 // };
 
-export const TreeView = memo<any>(({ name, data, dataIterator, nodeRenderer, expandPaths, expandLevel }) => {
+export const TreeView = memo(({ name, data, dataIterator, nodeRenderer, expandPaths, expandLevel }: any) => {
   const styles = useStyles('TreeView');
   const stateAndSetter = useState({});
   const [, setExpandedPaths] = stateAndSetter;

@@ -1,5 +1,7 @@
-import React, { FC, ReactNode } from 'react';
-import { useSchemaContext, SchemaProvider } from './SchemaContext';
+import React from 'react';
+import type { FC, ReactNode } from 'react';
+import { SchemaAwareObjectValue } from './SchemaAwareObjectValue.tsx';
+import { useSchemaContext, SchemaProvider } from './SchemaContext.tsx';
 
 export interface SchemaAwareObjectPreviewProps {
   data: unknown;
@@ -61,7 +63,7 @@ export const SchemaAwareObjectPreview: FC<SchemaAwareObjectPreviewProps> = ({
 
     const previewArray = object.slice(0, maxProperties).map((element, index) => (
       <SchemaProvider key={index} schema={elementCtx.schema} schemas={[]}>
-        <ObjectValue object={element} />
+        <SchemaAwareObjectValue object={element} ObjectValue={ObjectValue} />
       </SchemaProvider>
     ));
     if (object.length > maxProperties) {
@@ -94,7 +96,7 @@ export const SchemaAwareObjectPreview: FC<SchemaAwareObjectPreviewProps> = ({
             <ObjectName name={propertyName || `""`} />
             :&nbsp;
             <SchemaProvider schema={fieldCtx.schema} schemas={[]}>
-              <ObjectValue object={propertyValue} />
+              <SchemaAwareObjectValue object={propertyValue} ObjectValue={ObjectValue} />
             </SchemaProvider>
             {ellipsis}
           </span>

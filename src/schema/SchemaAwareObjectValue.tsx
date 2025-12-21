@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
-import { useSchemaContext } from './SchemaContext';
+import React from 'react';
+import type { FC } from 'react';
+import { useSchemaContext } from './SchemaContext.tsx';
 
 export interface SchemaAwareObjectValueProps {
   object: unknown;
@@ -35,5 +36,9 @@ export const SchemaAwareObjectValue: FC<SchemaAwareObjectValueProps> = ({ object
     }
   }
 
-  return <ObjectValue object={object} styles={styles} />;
+  if (styles) {
+    return <ObjectValue object={object} styles={styles} />;
+  }
+
+  return <ObjectValue object={object} />;
 };

@@ -1,5 +1,10 @@
-import React, { FC } from 'react';
-import { useSchemaContext } from './SchemaContext';
+import React from 'react';
+import type { FC } from 'react';
+import { useStyles } from '../styles/index.tsx';
+import { hasOwnProperty } from '../utils/objectPrototype.tsx';
+import { getPropertyValue } from '../utils/propertyUtils.tsx';
+import { SchemaAwareObjectPreview } from './SchemaAwareObjectPreview.tsx';
+import { SchemaProvider, useSchemaContext } from './SchemaContext.tsx';
 
 export interface SchemaAwareNodeRendererProps {
   /** Original ObjectRootLabel component */
@@ -51,25 +56,34 @@ export const createSchemaAwareNodeRenderer = ({
   };
 
   /** Schema-aware ObjectPreview that uses schema annotations */
-  const SchemaAwareObjectPreview: FC<{ data: unknown; path: string }> = ({ data, path }) => {
+  const hasOwnPropertyOnObject = (obj: object, prop: string) => hasOwnProperty.call(obj, prop);
+
+  const SchemaAwareObjectPreviewForPath: FC<{ data: unknown; path: string }> = ({ data, path }) => {
     const rootCtx = useSchemaContext();
     const schemaCtx = rootCtx.getContextForPath(path);
 
-    const prettyFormatted = schemaCtx.formatValue(data);
-    if (prettyFormatted !== undefined) {
-      return <span>{prettyFormatted}</span>;
-    }
-
-    return <ObjectPreview data={data} />;
+    return (
+      <SchemaProvider schema={schemaCtx.schema}>
+        <SchemaAwareObjectPreview
+          data={data}
+          ObjectPreview={ObjectPreview}
+          ObjectValue={ObjectValue}
+          ObjectName={ObjectName}
+          hasOwnProperty={hasOwnPropertyOnObject}
+          getPropertyValue={getPropertyValue}
+          useStyles={useStyles}
+        />
+      </SchemaProvider>
+    );
   };
 
   /** Schema-aware ObjectLabel that uses path-based schema lookup */
   const SchemaAwareObjectLabel: FC<{
-    name: string;
+    name: string | undefined;
     data: unknown;
     path: string;
-    isNonenumerable?: boolean;
-    expanded?: boolean;
+    isNonenumerable: boolean | undefined;
+    expanded: boolean | undefined;
   }> = ({ name, data, path, isNonenumerable = false, expanded }) => {
     const rootCtx = useSchemaContext();
     const schemaCtx = rootCtx.getContextForPath(path);
@@ -89,11 +103,17 @@ export const createSchemaAwareNodeRenderer = ({
         {typeof name === 'string' ? (
           <ObjectName name={name} dimmed={isNonenumerable} />
         ) : (
-          <SchemaAwareObjectPreview data={name} path={path} />
+          <SchemaAwareObjectPreviewForPath data={name} path={path} />
         )}
         <span>: </span>
         {isComplexObject ? (
-          <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} expanded={expanded} />
+          <SchemaAwareObjectPreviewWithName
+            data={data}
+            schemaDisplayName={schemaDisplayName}
+            expanded={expanded}
+            path={path}
+            title={description}
+          />
         ) : (
           <SchemaAwareObjectValue object={data} path={path} />
         )}
@@ -102,7 +122,12 @@ export const createSchemaAwareNodeRenderer = ({
   };
 
   /** Schema-aware ObjectRootLabel */
-  const SchemaAwareObjectRootLabel: FC<{ name?: string; data: unknown; path: string; expanded?: boolean }> = ({
+  const SchemaAwareObjectRootLabel: FC<{
+    name: string | undefined;
+    data: unknown;
+    path: string;
+    expanded: boolean | undefined;
+  }> = ({
     name,
     data,
     path,
@@ -133,7 +158,13 @@ export const createSchemaAwareNodeRenderer = ({
         <span title={description}>
           <ObjectName name={name} />
           <span>: </span>
-          <SchemaAwareObjectPreviewWithName data={data} schemaDisplayName={schemaDisplayName} expanded={expanded} />
+          <SchemaAwareObjectPreviewWithName
+            data={data}
+            schemaDisplayName={schemaDisplayName}
+            expanded={expanded}
+            path={path}
+            title={description}
+          />
         </span>
       );
     }
@@ -143,6 +174,7 @@ export const createSchemaAwareNodeRenderer = ({
         data={data}
         schemaDisplayName={schemaDisplayName}
         expanded={expanded}
+        path={path}
         title={description}
       />
     );
@@ -151,10 +183,11 @@ export const createSchemaAwareNodeRenderer = ({
   /** Helper for root preview with schema name */
   const SchemaAwareObjectPreviewWithName: FC<{
     data: unknown;
-    schemaDisplayName?: string;
-    expanded?: boolean;
-    title?: string;
-  }> = ({ data, schemaDisplayName, expanded, title }) => {
+    schemaDisplayName: string | undefined;
+    expanded: boolean | undefined;
+    title: string | undefined;
+    path: string;
+  }> = ({ data, schemaDisplayName, expanded, title, path }) => {
     const isComplexObject =
       typeof data === 'object' &&
       data !== null &&
@@ -163,10 +196,11 @@ export const createSchemaAwareNodeRenderer = ({
       data.constructor?.name === 'Object';
 
     /** When expanded, show only the type identifier (no inline preview needed since children are visible) */
-    if (expanded && schemaDisplayName && isComplexObject) {
+    if (expanded && isComplexObject) {
+      const label = schemaDisplayName ?? data.constructor?.name ?? 'Object';
       return (
-        <span title={title} style={{ fontStyle: 'italic' }}>
-          {schemaDisplayName}
+        <span title={title} style={schemaDisplayName ? { fontStyle: 'italic' } : undefined}>
+          {label}
         </span>
       );
     }
@@ -176,14 +210,14 @@ export const createSchemaAwareNodeRenderer = ({
       return (
         <span title={title}>
           <span style={{ fontStyle: 'italic' }}>{schemaDisplayName} </span>
-          <ObjectPreview data={data} />
+          <SchemaAwareObjectPreviewForPath data={data} path={path} />
         </span>
       );
     }
 
     return (
       <span title={title} style={{ display: 'contents' }}>
-        <ObjectPreview data={data} />
+        <SchemaAwareObjectPreviewForPath data={data} path={path} />
       </span>
     );
   };
@@ -201,11 +235,11 @@ export const createSchemaAwareNodeRenderer = ({
     expanded,
   }: {
     depth: number;
-    name: string;
+    name: string | undefined;
     data: unknown;
     path: string;
-    isNonenumerable?: boolean;
-    expanded?: boolean;
+    isNonenumerable: boolean | undefined;
+    expanded: boolean | undefined;
   }) => {
     if (depth === 0) {
       return <SchemaAwareObjectRootLabel name={name} data={data} path={path} expanded={expanded} />;

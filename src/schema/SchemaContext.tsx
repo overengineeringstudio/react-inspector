@@ -1,4 +1,5 @@
-import React, { createContext, useContext, FC, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
+import type { FC, ReactNode } from 'react';
 import type { Schema as S } from 'effect';
 import {
   type SchemaAnnotations,
@@ -11,13 +12,13 @@ import {
   lookupSchema,
   formatWithPretty,
   getDisplayName,
-} from './effectSchema';
+} from './effectSchema.tsx';
 
 export interface SchemaContextValue {
   /** The current schema for the data being inspected */
-  schema?: S.Schema.All;
+  schema: S.Schema.AnyNoContext | undefined;
   /** The root schema (stays constant during tree traversal) */
-  rootSchema?: S.Schema.All;
+  rootSchema: S.Schema.AnyNoContext | undefined;
   /** Registry of schemas for looking up by constructor name */
   registry: SchemaRegistry;
   /** Get annotations for the current schema */
@@ -33,9 +34,9 @@ export interface SchemaContextValue {
   /** Get schema context for array elements */
   getElementContext: () => SchemaContextValue;
   /** Look up a schema by name from registry */
-  lookupByName: (name: string) => S.Schema.All | undefined;
+  lookupByName: (name: string) => S.Schema.AnyNoContext | undefined;
   /** Get schema for a path like "$.address.street" or "$[0].name" */
-  getSchemaForPath: (path: string) => S.Schema.All | undefined;
+  getSchemaForPath: (path: string) => S.Schema.AnyNoContext | undefined;
   /** Get schema context for a path */
   getContextForPath: (path: string) => SchemaContextValue;
 }
@@ -60,9 +61,9 @@ const SchemaContext = createContext<SchemaContextValue>(defaultContextValue);
 export interface SchemaProviderProps {
   children: ReactNode;
   /** Schema for the data being inspected */
-  schema?: S.Schema.All;
+  schema?: S.Schema.AnyNoContext | undefined;
   /** Additional schemas to register for lookup by name */
-  schemas?: S.Schema.All[];
+  schemas?: S.Schema.AnyNoContext[] | undefined;
 }
 
 /**
@@ -80,11 +81,11 @@ const parsePathSegments = (path: string): string[] => {
  * Resolve a schema by traversing path segments from root schema.
  */
 const resolveSchemaForSegments = (
-  rootSchema: S.Schema.All | undefined,
+  rootSchema: S.Schema.AnyNoContext | undefined,
   segments: string[]
-): S.Schema.All | undefined => {
+): S.Schema.AnyNoContext | undefined => {
   if (!rootSchema) return undefined;
-  let current: S.Schema.All | undefined = rootSchema;
+  let current: S.Schema.AnyNoContext | undefined = rootSchema;
 
   for (const segment of segments) {
     if (!current) return undefined;
@@ -102,9 +103,9 @@ const resolveSchemaForSegments = (
 
 /** Create a context value for a given schema and registry */
 const createContextValue = (
-  schema: S.Schema.All | undefined,
+  schema: S.Schema.AnyNoContext | undefined,
   registry: SchemaRegistry,
-  rootSchema?: S.Schema.All
+  rootSchema?: S.Schema.AnyNoContext
 ): SchemaContextValue => {
   const effectiveRootSchema = rootSchema ?? schema;
 
@@ -168,8 +169,8 @@ export const useSchemaDisplayInfo = (
   value: unknown,
   fieldName?: string
 ): {
-  displayName?: string;
-  formattedValue?: string;
+  displayName: string | undefined;
+  formattedValue: string | undefined;
   hasSchema: boolean;
 } => {
   const ctx = useSchemaContext();

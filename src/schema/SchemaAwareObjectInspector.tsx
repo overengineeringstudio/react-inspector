@@ -1,7 +1,8 @@
-import React, { FC, ComponentProps, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import type { ComponentProps, FC } from 'react';
 import type { Schema as S } from 'effect';
-import { SchemaProvider } from './SchemaContext';
-import { createSchemaAwareNodeRenderer } from './SchemaAwareNodeRenderer';
+import { SchemaProvider } from './SchemaContext.tsx';
+import { createSchemaAwareNodeRenderer } from './SchemaAwareNodeRenderer.tsx';
 
 export interface SchemaAwareObjectInspectorDeps {
   /** Original ObjectRootLabel component */
@@ -27,9 +28,9 @@ export interface SchemaAwareObjectInspectorDeps {
 export const withSchemaSupport = <TInspector extends FC<any>>(
   ObjectInspector: TInspector,
   deps: SchemaAwareObjectInspectorDeps
-): FC<ComponentProps<TInspector> & { schema?: S.Schema.All; schemas?: S.Schema.All[] }> => {
+): FC<ComponentProps<TInspector> & { schema?: S.Schema.AnyNoContext; schemas?: S.Schema.AnyNoContext[] }> => {
   const SchemaAwareObjectInspector: FC<
-    ComponentProps<TInspector> & { schema?: S.Schema.All; schemas?: S.Schema.All[] }
+    ComponentProps<TInspector> & { schema?: S.Schema.AnyNoContext; schemas?: S.Schema.AnyNoContext[] }
   > = ({ schema, schemas, nodeRenderer, ...props }) => {
     const schemaNodeRenderer = useMemo(() => createSchemaAwareNodeRenderer(deps), [deps]);
 
@@ -55,9 +56,9 @@ export const withSchemaSupport = <TInspector extends FC<any>>(
  */
 export const withSchemaContext = <TInspector extends FC<any>>(
   ObjectInspector: TInspector
-): FC<ComponentProps<TInspector> & { schema?: S.Schema.All; schemas?: S.Schema.All[] }> => {
+): FC<ComponentProps<TInspector> & { schema?: S.Schema.AnyNoContext; schemas?: S.Schema.AnyNoContext[] }> => {
   const SchemaAwareObjectInspector: FC<
-    ComponentProps<TInspector> & { schema?: S.Schema.All; schemas?: S.Schema.All[] }
+    ComponentProps<TInspector> & { schema?: S.Schema.AnyNoContext; schemas?: S.Schema.AnyNoContext[] }
   > = ({ schema, schemas, ...props }) => {
     const inspector = <ObjectInspector {...(props as ComponentProps<TInspector>)} />;
 
